@@ -1,8 +1,8 @@
 import numpy as np
 
 from typing import List, Tuple, Set, Dict
-from primitives import Vertex, Vector, Spot
-from constants import MAXIMUM_FORCE_MAGNITUDE
+from SproutGame.primitives import Vertex, Vector, Spot
+from SproutGame.resources.constants import MAXIMUM_FORCE_MAGNITUDE
 
 
 def apply_force_to_vertex(vertex: Vertex, force: Vector) -> None:

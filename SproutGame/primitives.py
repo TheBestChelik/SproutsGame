@@ -1,6 +1,6 @@
 import numpy as np
 
-from constants import Color, LineStyle
+from SproutGame.resources.constants import Color, LineStyle
 from typing import Set, Tuple, List
 
 

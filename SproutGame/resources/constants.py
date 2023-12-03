@@ -13,6 +13,8 @@ PATH_WIDTH = 4
 # SPOT_SIZE = 15
 
 
+LOADING_ANIMATION_PATH = "SproutGame/resources/thinking.gif"
+
 class Color(Enum):
     RED = 'red'
     GREEN = 'green'

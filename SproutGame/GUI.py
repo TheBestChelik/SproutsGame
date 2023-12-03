@@ -2,9 +2,9 @@ from tkinter import *
 from tkinter import messagebox, colorchooser
 from tkinter import ttk
 import numpy as np
-from Board import Board
-from primitives import Vertex, Spot, Vector,  Path
-from constants import Color, LineStyle, VERTEX_SIZE, EDGE_WIDTH, PATH_WIDTH, CANVAS_SIZE, ErrorMessage
+from SproutGame.Board import Board
+from SproutGame.primitives import Vertex, Spot, Vector,  Path
+from SproutGame.resources.constants import Color, LineStyle, VERTEX_SIZE, EDGE_WIDTH, PATH_WIDTH, CANVAS_SIZE, LOADING_ANIMATION_PATH
 import threading
 from PIL import Image, ImageSequence, ImageTk
 import time
@@ -187,7 +187,7 @@ class Game:
         print("Hello, I am main menu button")
 
     def initialize_animation(self):
-        animated_gif = Image.open("thinking.gif")
+        animated_gif = Image.open(LOADING_ANIMATION_PATH)
         for frame in ImageSequence.Iterator(animated_gif):
             frame = frame.resize(
                 (int(CANVAS_SIZE*0.8), int(CANVAS_SIZE*0.8)), Image.LANCZOS)

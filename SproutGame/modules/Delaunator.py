@@ -1,8 +1,8 @@
 import math
 
 from typing import List
-from constants import Color
-from primitives import Vector, Vertex
+from SproutGame.resources.constants import Color
+from SproutGame.primitives import Vector, Vertex
 
 EPSILON = math.pow(2, -52)
 EDGE_STACK = [None] * 512

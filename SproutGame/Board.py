@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
-from primitives import Vertex, Vector, Spot, Path
+from SproutGame.primitives import Vertex, Vector, Spot, Path
 from typing import List, Set, Tuple
-from constants import Color, LineStyle, ErrorMessage, CANVAS_SIZE, VERTEX_SIZE
-from forces import calculate_resultant_forces, apply_force_to_vertex
+from SproutGame.resources.constants import Color, LineStyle, ErrorMessage, CANVAS_SIZE, VERTEX_SIZE
+from SproutGame.modules.forces import calculate_resultant_forces, apply_force_to_vertex
 # merge voronoi and delaunay in geometry.py
-from Voronoi import Voronoi
-from Delaunay import Delaunay
+from SproutGame.modules.Voronoi import Voronoi
+from SproutGame.modules.Delaunay import Delaunay
 import numpy as np
 
 import time

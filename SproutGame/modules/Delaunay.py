@@ -1,7 +1,7 @@
 from typing import List, Tuple
 import matplotlib.tri as tri
-from primitives import Vertex
-from Delaunator import Delaunator
+from SproutGame.primitives import Vertex
+from SproutGame.modules.Delaunator import Delaunator
 
 
 class Delaunay:
