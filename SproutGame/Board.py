@@ -1,14 +1,13 @@
 import matplotlib.pyplot as plt
-from SproutGame.primitives import Vertex, Vector, Spot, Path
-from typing import List, Set, Tuple
-from SproutGame.resources.constants import Color, LineStyle, ErrorMessage, CANVAS_SIZE, VERTEX_SIZE
-from SproutGame.modules.forces import calculate_resultant_forces, apply_force_to_vertex
-# merge voronoi and delaunay in geometry.py
-from SproutGame.modules.Voronoi import Voronoi
-from SproutGame.modules.Delaunay import Delaunay
 import numpy as np
-
 import time
+from typing import List, Set, Tuple
+
+from SproutGame.primitives import Vertex, Vector, Spot, Path
+from SproutGame.resources.constants import Color, LineStyle, CANVAS_SIZE, VERTEX_SIZE
+from SproutGame.modules.forces import calculate_resultant_forces, apply_force_to_vertex
+from SproutGame.modules.geometry import Voronoi, Delaunay
+
 
 
 class Board:
@@ -48,10 +47,6 @@ class Board:
     @property
     def vertices(self) -> Set:
         return self.__vertices
-
-    # @property
-    # def edges(self) -> Set:
-    #     return self.__edges
 
     @property
     def temporary_edges(self) -> Set:
@@ -136,8 +131,6 @@ class Board:
         self.__optimum_length = 0.03
         if len(self.vertices) < 140:
             self.__optimum_length = 0.1 - 0.0005 * len(self.vertices)
-        print("num of vertices:", len(self.vertices),
-              "current l_opt", self.optimum_length)
         if label:
             label.config(text=f"{self.current_player_name} can walk")
 
@@ -201,7 +194,6 @@ class Board:
                 if has_path(graph, v1, v2, black_list):
                     return False
             if v1.liberties > 1 and has_cycle(graph, v1, black_list):
-                print("cycle found, vertex", v1)
                 return False
 
         return True
@@ -212,7 +204,6 @@ class Board:
         if len(self.current_path) == 0:
             if spot.liberties < 1:
                 return (False, False)
-                return (False, ErrorMessage.SPOT_IS_DEAD, False)
 
             spot.minus_liberty()
             self.current_path.append(spot)
@@ -241,7 +232,6 @@ class Board:
         if vertex in self.current_path:
             # cancel move
             return self.check_move_can_cancel(vertex)
-            # return (False, ErrorMessage.PATH_INTERSECTION, False)
         prev_vertex = self.current_path[-1]
         if (prev_vertex, vertex) not in self.__temporary_edges and (vertex, prev_vertex) not in self.__temporary_edges:
             # self.check_move_can_cancel(vertex)
@@ -345,9 +335,6 @@ class Board:
     def segment_paths(self, newPath1, newPath2):
         for path in self.__pathes.values():
             l_opt = self.optimum_length
-            # if path == newPath1 or path == newPath2:
-            #     print("Shorting lopt")
-            #     l_opt /= 4
             path.segment_edges(self.vertices, l_opt)
 
     def adjust_to_new_boundaries(self, vertex, boundary: float):
@@ -384,21 +371,16 @@ class Board:
         t = time.time()
         no_forces_applied = True
         for _ in range(30):
-            # tt = time.time()
+
             resultant_forces = calculate_resultant_forces(
                 all_ver, set(edges), boundaries, self.optimum_length)
-            # print("Iteration time", time.time() - tt)
+
             for vertex, force in resultant_forces.items():
                 if force.magnitude > 0.0001:
                     no_forces_applied = False
-                # x = "{:.5f}".format(force.x)
-                # y = "{:.5f}".format(force.y)
-                # print(x, y)
                 apply_force_to_vertex(vertex, force)
             if no_forces_applied:
-                print(f"All forces are 0 stopping in {_} iteration")
                 break
-        print("Rebalancing time:", time.time() - t)
 
     def __get_vor_ridges(self, vor_points, vor_vertices, ridge_points, ridge_vertices):
         finite_segments = []
@@ -487,18 +469,10 @@ class Board:
         return merged_points
 
     def create_temp_vertices(self):
-        # self.triangulate()
-
-        # for (A, B) in self.__temporary_edges:
-        #     x = (A.x + B.x) / 2
-        #     y = (A.y + B.y) / 2
-        #     new_vertex = Vertex(x, y, Color.BLUE)
-        #     self.__temporary_vertices.add(new_vertex)
         vertices = []
         temp_vertices = []
         for p in self.border_points:
             vertices.append([p.x, p.y])
-        # return
         for p in self.vertices:
             vertices.append([p.x, p.y])
         voronoi = Voronoi(np.array(vertices))
@@ -510,7 +484,6 @@ class Board:
 
         min_dist = VERTEX_SIZE / CANVAS_SIZE
         merged_voronoi = self.merge_points(temp_vertices, min_dist)
-        print(len(temp_vertices) - len(merged_voronoi), "points merged")
 
         for v in merged_voronoi:
             if v.x < self.border_points[0].x or v.y < self.border_points[0].y or v.x > self.border_points[2].x or v.y > self.border_points[2].y:
@@ -543,12 +516,6 @@ class Board:
             if det == 0:
 
                 return False
-                # Lines are parallel and may or may not intersect
-                if (P1.x == P3.x and P1.y == P3.y) or (P2.x == P4.x and P2.y == P4.y):
-                    return True
-                elif (P1.x == P4.x and P1.y == P4.y) or (P2.x == P3.x and P2.y == P3.y):
-                    return True
-                return False
 
             # Calculate t1 and t2
             t1 = ((P3.x - P1.x) * (-dir2.y) - (-dir2.x) * (P3.y - P1.y)) / det
@@ -563,24 +530,13 @@ class Board:
                 # Lines do not intersect within the given segments
                 return False
 
-        # def ccw(A, B, C):
-        #     return (C.y - A.y) * (B.x - A.x) > (B.y - A.y) * (C.x - A.x)
-
-        # def do_lines_intersect(A, B, C, D):
-        #     return ccw(A, C, D) != ccw(B, C, D) and ccw(A, B, C) != ccw(A, B, D)
-
-        # print("Deleting triangulation")
         for (A, B) in del_edges:
             if (A, B) in self_edges or (B, A) in self_edges:
                 continue
             for (E1, E2) in self_edges:
-                # pass
                 if A in (E1, E2) or B in (E1, E2):
-                    # print("common point")
                     continue
                 if do_lines_intersect(A, B, E1, E2):
-                    # print(A, B, E1, E2)
-
                     break
             else:
                 self.__temporary_edges.add((A, B))
@@ -600,38 +556,3 @@ class Board:
         for path in self.pathes.values():
             path.merge_edges(self.vertices, self.optimum_length)
 
-
-# if __name__ == "__main__":
-
-#     S1 = Spot(0.3, 0.3, Color.RED)
-#     S2 = Spot(0.7, 0.7, Color.RED)
-#     S3 = Spot(0.3, 0.7, Color.RED)
-#     S4 = Spot(0.7, 0.3, Color.RED)
-#     # S1 = Spot(0.3, 0.3, Color.RED)
-#     # S2 = Spot(0.7, 0.7, Color.RED)
-#     # # s = Vertex(0.7, 0.7, Color.BLUE)
-#     # A = Vertex(0.5, 0.3, Color.BLUE)
-#     # B = Vertex(0.3, 0.5, Color.BLUE)
-#     # C = Vertex(0.33, 0.53, Color.BLUE)
-#     # D = Spot(0.35, 0.55, Color.RED)
-#     board = Board(
-#         vertices=set([S1, S2, S3, S4]),
-#         # temporary_vertices=set([A, B, C]),
-#         optimum_length=0.15)
-#     Display(board)
-#     # board.insert_path([S1, A, C, B, S1], Color.GREEN)
-#     # board.insert_path([S1, A, S2], Color.GREEN)
-#     # board.insert_path([S1, S2], Color.GREEN)
-#     # board.insert_path([S2, C, B, S1], Color.GREEN)
-#     # Display(board)
-#     board.segment_paths()
-#     Display(board)
-#     board.rebalance()
-#     Display(board)
-#     board.merge_edges()
-#     Display(board)
-
-#     board.create_temp_vertices()
-#     Display(board)
-#     board.triangulate()
-#     Display(board)
