@@ -33,9 +33,7 @@ def calculate_vertex_repulsion_force(vertex1: Vertex, vertex2: Vertex, optimum_l
     resultant = Vector(vertex2.x, vertex2.y) - Vector(vertex1.x, vertex1.y)
 
     if resultant.magnitude == 0:
-        print("Distance is zeo!", vertex1, vertex2)
         return Vector(0, 0)
-        raise RuntimeError("Distance between two poins is zero")
 
     if resultant.magnitude >= optimum_length:
         return Vector(0, 0)
@@ -112,7 +110,7 @@ def calculate_boundary_repulsion_force(v, edge, l_opt,  bord_repuls_const) -> Ve
     if dist >= l_opt:
         return Vector(0, 0)
     else:
-        # return (Vector(0.5, 0.5) - Vector(v.x, v.y)) * bord_repuls_const
+
         return (direction / dist) * ((bord_repuls_const - dist) ** 2)
 
 
@@ -126,7 +124,6 @@ def calculate_resultant_forces(vertices: Set[Vertex], edges: Set[Tuple[Vertex, V
     for v in vertices:
         resultant_forces.setdefault(v, Vector(0, 0))
     for vertex1 in vertices:
-        # resultant_forces[vertex1] = Vector(0, 0)
         # vertex-to-vertex
         for vertex2 in vertices:
             if vertex1 == vertex2:
@@ -137,8 +134,7 @@ def calculate_resultant_forces(vertices: Set[Vertex], edges: Set[Tuple[Vertex, V
             vertex_to_vertex_computed.add((vertex1, vertex2))
 
             if (type(vertex1) is not Spot and type(vertex2) is not Spot) and ((vertex1, vertex2) in edges or (vertex2, vertex1) in edges):
-                # if ((vertex1, vertex2) in edges or (vertex2, vertex1) in edges):
-                # pass
+
                 vertex_attraction_force = calculate_vertex_attraction_force(
                     vertex2, vertex1, optimum_length, vertex_attraction_coefficient)
                 resultant_forces[vertex1] += vertex_attraction_force
@@ -159,6 +155,6 @@ def calculate_resultant_forces(vertices: Set[Vertex], edges: Set[Tuple[Vertex, V
                 optimum_length, edge_repulsion_coefficient)
             resultant_forces[vertex1] += edge_repulsion_force
 
-        # resultant_forces[vertex1] = sum
+
 
     return resultant_forces

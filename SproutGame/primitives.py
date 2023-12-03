@@ -73,8 +73,6 @@ class Vertex:
     def color(self, color) -> None:
         self.__color = color
 
-    # Rewrite types if python version is 3.11
-
     def translate(self, vector: Vector) -> None:
         self.__x += vector.x
         self.__y += vector.y
@@ -162,11 +160,8 @@ class Path:
     def merge_edges(self, vertices: Set[Vertex], optimum_length: float):
         if len(self.__edges) == 1:
             return
-        # print("Merging")
         merged_edges = []
         i = 0
-        # for p in self.__edges:
-        #     print(p[0], p[1])
 
         while i < len(self.__edges):
             node1, node2 = self.__edges[i]

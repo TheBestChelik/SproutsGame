@@ -18,8 +18,6 @@ class Game:
         self.players = []
         self.root = Tk()
         self.init_main_menu()
-        # self.init_game_stage()
-        # self.run()
         self.root.mainloop()
 
     def init_main_menu(self):
@@ -91,7 +89,6 @@ class Game:
         if not color:
             self.main_menu_error_label.config(text="Choose your color")
             return
-        print(color)
         self.main_menu_error_label.config(text="")
         self.players.append((name, color))
         if len(self.players) != self.players_number:
@@ -161,11 +158,10 @@ class Game:
         self.canvas.grid(row=1, column=0, columnspan=3, padx=0, pady=0)
 
         self.canvas.bind("<Button-1>", self.move)
-        # self.canvas.bind("<Button-3>", self.cancel_move)
 
         self.board = None
 
-        self.frames = []  # Store PhotoImage objects here
+        self.frames = []
         self.initialize_animation()
 
         self.animation_thread = None
@@ -200,13 +196,11 @@ class Game:
         self.canvas.delete("all")
         i = 0
         while not self.stop_animation:
-            # self.canvas.delete("all")  # Clear the canvas
             self.canvas.create_image(
                 CANVAS_SIZE//2, CANVAS_SIZE//2, anchor=CENTER, image=self.frames[self.current_frame_index])
             self.current_frame_index = (
                 self.current_frame_index + 1) % len(self.frames)
-            # self.root.update()  # Update the canvas
-            # Change frame every 100 milliseconds
+
             time.sleep(0.025)
             i += 1
             if i == 100:
@@ -224,8 +218,6 @@ class Game:
                 self.timer_label.config(
                     text=f"{self.board.current_player_name}'s time is up!")
                 self.board.end_of_time_based_game()
-        # else:
-        #     self.timer_label.config(text="Timer Paused")
 
     def __determine_closest_vertex(self, x: int, y: int):
         rel_x = x/self.canvas_width
@@ -278,13 +270,11 @@ class Game:
     def perform_step(self):
         if self.time_based_game:
             self.timer_paused = True
-        # Update the label to show that the step is in progress
+
         self.label.config(text="Step in progress...")
 
-        # Perform the step operation in your separate thread
+
         self.board.step(self.label)
-        # time.sleep(5)
-        # Update the label after the step is done
 
         self.stop_animation = True
 
@@ -323,17 +313,12 @@ class Game:
             self.draw_vertex(p)
 
     def run(self):
-        print("runnng")
 
         S1 = Spot(0.3, 0.3, Color.RED.value, 3)
         S2 = Spot(0.7, 0.7, Color.RED.value, 3)
         S3 = Spot(0.3, 0.7, Color.RED.value, 3)
         S4 = Spot(0.7, 0.3, Color.RED.value, 3)
         spots = {S1, S2, S3, S4}
-        if len(self.players) == 0:
-            self.time_based_game = True
-            self.players = [("Bobek", Color.YELLOW.value),
-                            ('Michail', Color.BLUE.value)]
         self.board = Board(
             time_based_game=self.time_based_game,
             players=self.players,
@@ -350,10 +335,3 @@ class Game:
 
 if __name__ == "__main__":
     game = Game()
-
-    # S5 = Spot(0.4, 0.4, Color.RED, 3)
-    # S6 = Spot(0.6, 0.6, Color.RED, 3)
-    # S7 = Spot(0.4, 0.6, Color.RED, 3)
-    # S8 = Spot(0.9, 0.4, Color.RED, 3)
-    # spots = {S1, S2, S3, S4}
-    # game.run(spots=spots)
