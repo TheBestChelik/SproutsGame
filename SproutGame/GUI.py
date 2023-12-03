@@ -3,7 +3,8 @@ from tkinter import messagebox, colorchooser
 from tkinter import ttk
 import numpy as np
 from SproutGame.Board import Board
-from SproutGame.primitives import Vertex, Spot, Vector,  Path
+from SproutGame.modules.geometry import generate_spot_coordinates
+from SproutGame.primitives import Spot, Vector
 from SproutGame.resources.constants import Color, LineStyle, VERTEX_SIZE, EDGE_WIDTH, PATH_WIDTH, CANVAS_SIZE, LOADING_ANIMATION_PATH
 import threading
 from PIL import Image, ImageSequence, ImageTk
@@ -313,12 +314,13 @@ class Game:
             self.draw_vertex(p)
 
     def run(self):
-
-        S1 = Spot(0.3, 0.3, Color.RED.value, 3)
-        S2 = Spot(0.7, 0.7, Color.RED.value, 3)
-        S3 = Spot(0.3, 0.7, Color.RED.value, 3)
-        S4 = Spot(0.7, 0.3, Color.RED.value, 3)
-        spots = {S1, S2, S3, S4}
+        spots = set()
+        field_size = 0.8
+        spots_coordinates = generate_spot_coordinates(self.spots_number, field_size)
+        for coordinate in spots_coordinates:
+            S = Spot(coordinate[0], coordinate[1], Color.RED.value, 3)
+            spots.add(S)
+        
         self.board = Board(
             time_based_game=self.time_based_game,
             players=self.players,
