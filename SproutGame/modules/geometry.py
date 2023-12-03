@@ -1,3 +1,4 @@
+import math
 import matplotlib.tri as tri
 import numpy as np
 import itertools
@@ -134,3 +135,41 @@ class Voronoi:
     def ridge_vertices(self):
         ridge_vertices = self.ridge_vertices_list
         return ridge_vertices
+
+
+
+def generate_spot_coordinates(num_spots, field_size):
+    if num_spots < 1:
+        raise ValueError("Number of spots must be at least 1.")
+    if not (0 <= field_size <= 1) or not (0 <= field_size <= 1):
+        raise ValueError("Field dimensions must be between 0 and 1.")
+
+    if num_spots == 1:
+        # Only one spot, place it in the middle of the field
+        return [(0.5 * field_size, 0.5 * field_size)]
+
+    elif num_spots == 2:
+        # Two spots, place them in opposite corners of the field
+        return [(0, 0), (field_size, field_size)]
+
+    elif num_spots == 3:
+        # Three spots, place them in equal distance around the center
+        spot_coordinates = []
+        for i in range(num_spots):
+            angle = 2 * math.pi * i / num_spots
+            x = 0.5 + 0.4 * math.cos(angle) * field_size  # Adjust the multiplier for the size of the circle
+            y = 0.5 + 0.4 * math.sin(angle) * field_size
+            spot_coordinates.append((x, y))
+        return spot_coordinates
+
+    else:
+        # For more than three spots, use the circle distribution as before
+        max_radius = min(field_size, field_size) / 2
+        circle_radius = max_radius * 0.9
+        spot_coordinates = []
+        for i in range(num_spots):
+            angle = 2 * math.pi * i / num_spots
+            x = 0.5 + circle_radius * math.cos(angle)
+            y = 0.5 + circle_radius * math.sin(angle)
+            spot_coordinates.append((x, y))
+        return spot_coordinates
