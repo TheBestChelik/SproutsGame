@@ -181,7 +181,7 @@ class Game:
 
     def main_menu(self):
         self.clear_elements()
-        print("Hello, I am main menu button")
+        self.init_main_menu()
 
     def initialize_animation(self):
         animated_gif = Image.open(LOADING_ANIMATION_PATH)
