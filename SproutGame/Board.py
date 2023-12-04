@@ -7,6 +7,7 @@ from SproutGame.primitives import Vertex, Vector, Spot, Path
 from SproutGame.resources.constants import Color, LineStyle, CANVAS_SIZE, VERTEX_SIZE
 from SproutGame.modules.forces import calculate_resultant_forces, apply_force_to_vertex
 from SproutGame.modules.geometry import Voronoi, Delaunay
+from SproutGame.resources.GUI_Constants import GAME_OVER_TITLE
 
 
 
@@ -83,8 +84,6 @@ class Board:
         self.game_overed = True
 
     def step(self, label=None):
-        if label:
-            label.config(text="Inserting path...")
         path1, path2 = None, None
         if len(self.current_path) != 0:
             path1, path2 = self.insert_path(
@@ -94,38 +93,18 @@ class Board:
         self.current_path = []
         self.__temporary_edges = set()
         self.__temporary_vertices = set()
-        if label:
-            label.config(text="segmenting paths...")
         self.segment_paths(path1, path2)
-        if label:
-            label.config(text="rebalancing...")
         self.rebalance()
-        if label:
-            label.config(text="adjusting boundariess...")
         self.adjust_to_new_boundaries(self.vertices, 0.1)
-        if label:
-            label.config(text="merging edge vertices...")
         self.merge_edges()
-        if label:
-            label.config(text="creating additional vertices...")
         self.create_temp_vertices()
-
-        if label:
-            label.config(text="adjusting boundariess...")
         self.adjust_to_new_boundaries(self.vertices, 0.1)
-        if label:
-            label.config(text="adding boundary vertices...")
         self.add_boundary_points()
-        if label:
-            label.config(text="triangulating...")
         self.triangulate()
-        if label:
-            label.config(text="ckecking end of game...")
-
         end_of_game = self.check_end_of_game()
         if end_of_game:
             if label:
-                label.config(text="end of this game!")
+                label.config(text=GAME_OVER_TITLE)
             self.game_overed = True
             return
         self.__optimum_length = 0.03
@@ -309,7 +288,6 @@ class Board:
 
         return edges
 
-    # def insert_path(self, A: Spot, B: Spot, edges: List[Tuple[Vertex, Vertex]], color: Color) -> None:
     def insert_path(self, path: List[Vertex], color) -> Tuple[Path, Path]:
         A = path[0]
         B = path[-1]
@@ -509,22 +487,16 @@ class Board:
 
     def __add_edges_to_temp_edges(self, del_edges, self_edges):
         def do_lines_intersect(P1, P2, P3, P4):
-            # Calculate direction vectors
             dir1 = Vector(P2.x, P2.y) - Vector(P1.x, P1.y)
             dir2 = Vector(P4.x, P4.y) - Vector(P3.x, P3.y)
 
-            # Calculate determinant
             det = dir1.x * (-dir2.y) - (-dir2.x) * dir1.y
 
             if det == 0:
-
                 return False
 
-            # Calculate t1 and t2
             t1 = ((P3.x - P1.x) * (-dir2.y) - (-dir2.x) * (P3.y - P1.y)) / det
             t2 = (dir1.x * (P3.y - P1.y) - (P3.x - P1.x) * dir1.y) / det
-
-            # Check if t1 and t2 are within [0, 1]
 
             if 0 < t1 < 1 and 0 < t2 < 1:
                 # Lines intersect within the given segments
