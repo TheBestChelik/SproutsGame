@@ -6,6 +6,7 @@ from SproutGame.Board import Board
 from SproutGame.modules.geometry import generate_spot_coordinates
 from SproutGame.primitives import Spot, Vector
 from SproutGame.resources.constants import Color, LineStyle, VERTEX_SIZE, EDGE_WIDTH, PATH_WIDTH, CANVAS_SIZE, LOADING_ANIMATION_PATH
+from SproutGame.resources.GUI_Constants import *
 import threading
 from PIL import Image, ImageSequence, ImageTk
 import time
@@ -22,29 +23,27 @@ class Game:
         self.root.mainloop()
 
     def init_main_menu(self):
-        self.root.title("Main Menu")
-        self.root.geometry(f"{300}x{340}")
 
-        # Configure a custom font and background color
-        custom_font = ("Helvetica", 12)
-        background_color = "#f2f2f2"
-        self.root.configure(bg=background_color)
+        self.root.title(MAIN_MENU_TITLE)
+        self.root.geometry(MAIN_MENU_GEOMETRY)
+
+        self.root.configure(bg=BACKGROUND_COLOR)
 
         validate_numeric = self.root.register(self.validate_numeric_input)
 
         # Create and style labels
         label_players = Label(
-            self.root, text="Enter number of players:", font=custom_font, bg=background_color)
+            self.root, text=NUMBER_PLAYERS_LABEL, font=TEXT_FONT, bg=BACKGROUND_COLOR)
         label_players.pack(pady=10)
 
         # Style entry fields
-        entry_style = {"font": custom_font, "width": 15}
+        entry_style = {"font": TEXT_FONT, "width": 15}
         entry_players = Entry(self.root, **entry_style, validate='key',
                               validatecommand=(validate_numeric, "%P"))
         entry_players.pack(pady=10)
 
         label_spots = Label(
-            self.root, text="Enter number of spots:", font=custom_font, bg=background_color)
+            self.root, text=NUMBER_SPOTS_LABEL, font=TEXT_FONT, bg=BACKGROUND_COLOR)
         label_spots.pack(pady=10)
 
         entry_spots = Entry(self.root, **entry_style, validate='key',
@@ -52,22 +51,22 @@ class Game:
         entry_spots.pack(pady=10)
         time_based_game_var = BooleanVar()
         time_based_checkbutton = Checkbutton(
-            self.root, text="Time-based game", variable=time_based_game_var, font=custom_font, bg=background_color)
+            self.root, text=TIME_BASED_GAME_TEXT, variable=time_based_game_var, font=TEXT_FONT, bg=BACKGROUND_COLOR)
         time_based_checkbutton.pack(pady=10)
 
         # Style submit button
-        error_color = "#FF0000"
+        
         self.main_menu_error_label = Label(
-            self.root, text="", font=custom_font, fg=error_color, bg=background_color)
+            self.root, text="", font=TEXT_FONT, fg=ERROR_TEXT_COLOR, bg=BACKGROUND_COLOR)
         self.main_menu_error_label.pack(side='bottom', pady=10)
 
         self.submit_button = Button(
-            self.root, text="Submit", command=lambda: self.submit_game_details(entry_players.get(), entry_spots.get(), time_based_game_var
-                                                                               ), font=custom_font)
+            self.root, text=OK_BUTTON_TEXT, command=lambda: self.submit_game_details(entry_players.get(), entry_spots.get(), time_based_game_var
+                                                                               ), font=TEXT_FONT)
         self.submit_button.pack(side='bottom', pady=20)
 
     def init_color_name_menu(self, number):
-        self.root.title("Player Info")
+        self.root.title(PLAYER_INFO_TITLE)
 
         # Create and style labels
         label_name = Label(
@@ -83,12 +82,13 @@ class Game:
             name_entry.get()))
 
     def submit_player(self, name):
+
         if len(name) == 0:
-            self.main_menu_error_label.config(text="enter name")
+            self.main_menu_error_label.config(text=NAME_NOT_SET_ERROR_TEXT)
             return
         color = colorchooser.askcolor()[1]
         if not color:
-            self.main_menu_error_label.config(text="Choose your color")
+            self.main_menu_error_label.config(text=COLOR_NOT_SET_ERROR_TEXT)
             return
         self.main_menu_error_label.config(text="")
         self.players.append((name, color))
@@ -103,50 +103,50 @@ class Game:
         self.run()
 
     def submit_game_details(self, player_num_text, spot_num_text, time_based_var):
+
         self.time_based_game = time_based_var.get()
         if len(player_num_text) == 0:
-            self.main_menu_error_label.config(text="enter number of players")
+            self.main_menu_error_label.config(text=PLAYER_NUMBER_NOT_SET_ERROR_TEXT)
             return
         if len(spot_num_text) == 0:
-            self.main_menu_error_label.config(text="enter number of spots")
+            self.main_menu_error_label.config(text=SPOT_NUMBER_NOT_SET_ERROR_TEXT)
             return
         self.players_number = int(player_num_text)
         self.spots_number = int(spot_num_text)
         if self.players_number < 2:
             self.main_menu_error_label.config(
-                text="who are you going to play with")
+                text=NOT_ENOUGH_PLAYERS_ERROR_TEXT)
             return
         if self.spots_number < 1:
             self.main_menu_error_label.config(
-                text="you cant play without spots")
+                text=NOT_ENOUGH_SPOTS_ERROR_TEXT)
             return
         if self.players_number > 10:
-            self.main_menu_error_label.config(text="max num players is 10")
+            self.main_menu_error_label.config(text=TOO_MANY_PLAYERS_ERROR_TEXT)
             return
         if self.spots_number > 8:
-            self.main_menu_error_label.config(text="max spot number is 8")
+            self.main_menu_error_label.config(text=TOO_MANY_SPOTS_ERROR_TEXT)
             return
         self.main_menu_error_label.config(text="")
         self.clear_elements([self.main_menu_error_label, self.submit_button])
         self.init_color_name_menu(0)
 
     def init_game_stage(self):
-
-        self.root.geometry(f"{CANVAS_SIZE}x{CANVAS_SIZE + 40}")
+        self.root.geometry(MAIN_GAME_GEOMETRY)
         frm = ttk.Frame(self.root)
         frm.grid()
 
         # Create elements
         self.main_menu_button = Button(
-            frm, text='Main Menu', command=self.main_menu)
+            frm, text=MAIN_MENU_BUTTON_TEXT, command=self.main_menu)
         self.main_menu_button.grid(row=0, column=0, padx=10, pady=10)
 
         if self.time_based_game:
             self.timer_paused = True
-            self.timer_label = Label(frm, text="Your middle label text")
+            self.timer_label = Label(frm)
             self.timer_label.grid(row=0, column=1, padx=10, pady=10)
 
-        self.label = Label(frm, text="Some stupid text")
+        self.label = Label(frm)
         self.label.grid(row=0, column=2, padx=10, pady=10)
 
         self.canvas_width = CANVAS_SIZE
@@ -155,7 +155,7 @@ class Game:
         self.canvas = Canvas(frm,
                              width=self.canvas_width,
                              height=self.canvas_height,
-                             bg='white')
+                             bg=CANVAS_BACKGROUND_COLOR)
         self.canvas.grid(row=1, column=0, columnspan=3, padx=0, pady=0)
 
         self.canvas.bind("<Button-1>", self.move)
@@ -206,7 +206,7 @@ class Game:
             i += 1
             if i == 100:
                 i = 0
-                self.canvas.delete("all")  # Clear the canvas
+                self.canvas.delete("all")
 
     def update_timer(self):
         if not self.timer_paused:
@@ -249,8 +249,9 @@ class Game:
             x1, y1, x2, y2, fill=color, dash=linestyle.value, width=EDGE_WIDTH)
 
     def move(self, event):
+
         if self.board.game_overed:
-            messagebox.showinfo("Game over", "You cant move, game overed")
+            messagebox.showinfo(GAME_OVER_TITLE, MOVE_NOT_POSSIBLE_GAME_OVER)
             return
         vertex = self.__determine_closest_vertex(event.x, event.y)
         redraw_frame, end_of_path = False, False
@@ -263,16 +264,16 @@ class Game:
             self.Display()
 
         if end_of_path:
-            self.stop_animation = False  # Reset the flag before starting the animation
+            self.stop_animation = False 
             self.animation_thread = threading.Thread(target=self.animate)
-            self.animation_thread.start()  # Start the animation thread
+            self.animation_thread.start()
             threading.Thread(target=self.perform_step).start()
 
     def perform_step(self):
         if self.time_based_game:
             self.timer_paused = True
 
-        self.label.config(text="Step in progress...")
+        self.label.config(text=STEP_LOADING_LABEL)
 
 
         self.board.step(self.label)
