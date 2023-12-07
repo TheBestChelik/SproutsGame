@@ -1,3 +1,2 @@
 # project-sprouts
-
-Just a blank README.md for now... Please, feel free to write down anything important here. However, I would suggest we keep all discussions in the Discord server, and all the thoughts recorded in FigJam.
+Technical Assigment for Eugen: https://docs.google.com/document/d/10mYkyLnxfGu90LPsA11d2tFsTwVuqBym01DgAlak-Jw/edit?usp=sharing
