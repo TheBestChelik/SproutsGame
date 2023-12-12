@@ -1,15 +1,17 @@
+import threading
+import time
 from tkinter import *
 from tkinter import messagebox, colorchooser
 from tkinter import ttk
-import numpy as np
+from PIL import Image, ImageSequence, ImageTk
+
 from SproutGame.Board import Board
 from SproutGame.modules.geometry import generate_spot_coordinates
 from SproutGame.primitives import Spot, Vector
 from SproutGame.resources.constants import Color, LineStyle, VERTEX_SIZE, EDGE_WIDTH, PATH_WIDTH, CANVAS_SIZE, LOADING_ANIMATION_PATH
 from SproutGame.resources.GUI_Constants import *
-import threading
-from PIL import Image, ImageSequence, ImageTk
-import time
+
+
 
 
 class Game:

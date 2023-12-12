@@ -1,5 +1,3 @@
-import numpy as np
-
 from typing import List, Tuple, Set, Dict
 from SproutGame.primitives import Vertex, Vector, Spot
 from SproutGame.resources.constants import MAXIMUM_FORCE_MAGNITUDE
