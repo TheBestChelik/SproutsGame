@@ -16,8 +16,7 @@
       - [Delaunay](#delaunay)
       - [Voronoi](#voronoi)
       - [Forses](#forses)
-    - [Additional recourses](#additional-recourses)
-  - [Requirements](#requirements)
+    - [References](#references)
   - [Run the game](#run-the-game)
     - [Installation](#installation)
     - [Run](#run)
@@ -76,12 +75,30 @@ The Voronoi module holds equal significance to Delaunay, aiming to strategically
 Can be found in `SproutGame/modules/forces.py`
 
 The Forces module plays a crucial role in achieving visual balance on the user's screen through force rebalancing. This module employs various forces to position vertices and spots at optimal distances from each other, ensuring an aesthetically pleasing and well-arranged image.
-### Additional recourses
+### References
+References used while development of the game:
 
-## Requirements
+1. [Wikipedia](https://en.wikipedia.org/wiki/Sprouts_(game))
+2. [Implementation of the
+Sprouts game and
+evaluation of varying
+strategies](https://www2.ki.informatik.uni-frankfurt.de/bachelor/abgeschlossen/2016_Hanczak.pdf)
+3. [Computer Analysis of Sprouts](https://www.cs.cmu.edu/~sleator/papers/sprouts.pdf)
+4. [Algorithms for interactive Sprouts](https://www.sciencedirect.com/science/article/pii/S0304397516302778)
+5. [Implementation of Sprouts:
+a graph drawing game](https://arxiv.org/pdf/2108.07671.pdf)
 
 ## Run the game
-
 ### Installation
-
+Run
+```bat 
+  gh repo clone TheBestChelik/SproutsGame
+```
+Then install the requirements
+```bat
+  pip install -r requirements.txt 
+```
 ### Run
+```bat
+  python main.py
+```
