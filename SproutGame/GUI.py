@@ -183,6 +183,10 @@ class Game:
 
     def main_menu(self):
         self.clear_elements()
+        self.time_based_game = False
+        self.players_number = 0
+        self.spots_number = 0
+        self.players = []
         self.init_main_menu()
 
     def initialize_animation(self):
