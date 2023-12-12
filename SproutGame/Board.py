@@ -192,14 +192,14 @@ class Board:
         if len(self.current_path) == 1:
             if spot in self.current_path:
                 return (self.check_move_can_cancel(spot), False)
-
-        prev_vertex = self.current_path[-1]
-        if (prev_vertex, spot) not in self.__temporary_edges and (spot, prev_vertex) not in self.__temporary_edges:
-            return False, False
-        
-        prev_prev_vertex = self.current_path[-2]
-        if prev_prev_vertex == spot:
-            return False, False        
+        else:
+            prev_vertex = self.current_path[-1]
+            if (prev_vertex, spot) not in self.__temporary_edges and (spot, prev_vertex) not in self.__temporary_edges:
+                return False, False
+            
+            prev_prev_vertex = self.current_path[-2]
+            if prev_prev_vertex == spot:
+                return False, False        
 
         if spot.liberties < 1:
             return (False, False)
